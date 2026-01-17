@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VideoUploader } from './components/VideoUploader';
 import { SubtitleDisplay } from './components/SubtitleDisplay';
 import { LoadingOverlay } from './components/LoadingOverlay';
 import { SettingsModal } from './components/SettingsModal';
 import { generateSubtitlesFromVideo } from './services/geminiService';
 import { VideoFile, ProcessingStatus, GeneratorSettings } from './types';
-import { Sparkles, Clapperboard, AlertCircle, Settings } from 'lucide-react';
+import { Sparkles, Clapperboard, AlertCircle, Settings, Key, ExternalLink } from 'lucide-react';
 
 const App: React.FC = () => {
+  // API Key State
+  const [hasApiKey, setHasApiKey] = useState(false);
+  const [isKeyChecking, setIsKeyChecking] = useState(true);
+
+  // App State
   const [selectedVideo, setSelectedVideo] = useState<VideoFile | null>(null);
   const [status, setStatus] = useState<ProcessingStatus>(ProcessingStatus.IDLE);
   const [srtContent, setSrtContent] = useState<string | null>(null);
@@ -21,6 +26,33 @@ const App: React.FC = () => {
     modelId: 'gemini-3-pro-preview',
     customEndpoint: ''
   });
+
+  useEffect(() => {
+    const checkKey = async () => {
+      try {
+        if ((window as any).aistudio) {
+          const hasKey = await (window as any).aistudio.hasSelectedApiKey();
+          setHasApiKey(hasKey);
+        } else {
+          // Fallback for environments without the wrapper (e.g. local dev), allow entry
+          // But in the specific workshop environment, this branch likely isn't taken.
+          setHasApiKey(true);
+        }
+      } catch (e) {
+        console.error("Failed to check API key status", e);
+      } finally {
+        setIsKeyChecking(false);
+      }
+    };
+    checkKey();
+  }, []);
+
+  const handleApiKeySelect = async () => {
+    if ((window as any).aistudio) {
+      await (window as any).aistudio.openSelectKey();
+      setHasApiKey(true);
+    }
+  };
 
   const handleVideoSelected = (video: VideoFile) => {
     setSelectedVideo(video);
@@ -51,12 +83,68 @@ const App: React.FC = () => {
 
       setSrtContent(subtitles);
       setStatus(ProcessingStatus.COMPLETED);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setErrorMsg("Failed to generate subtitles. Please check your API key, model settings, or try a shorter video.");
+      
+      const errorMessage = err?.message || '';
+      
+      // Handle key permission errors
+      if (errorMessage.includes('403') || errorMessage.includes('Requested entity was not found')) {
+        setErrorMsg("Permission denied. Please re-select your API key.");
+        setHasApiKey(false); // Force re-selection
+        setStatus(ProcessingStatus.IDLE);
+        return;
+      }
+
+      setErrorMsg("Failed to generate subtitles. Please check your settings or try a shorter video.");
       setStatus(ProcessingStatus.ERROR);
     }
   };
+
+  // API Key Selection Screen
+  if (!isKeyChecking && !hasApiKey) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] text-slate-100 flex flex-col items-center justify-center p-6">
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-3xl opacity-50"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-900/10 rounded-full blur-3xl opacity-30"></div>
+        </div>
+
+        <div className="max-w-md w-full bg-slate-800/50 backdrop-blur-md rounded-2xl border border-white/10 p-8 shadow-2xl relative z-10 text-center space-y-6">
+          <div className="w-16 h-16 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto ring-1 ring-indigo-500/50">
+             <Key className="w-8 h-8 text-indigo-400" />
+          </div>
+          
+          <div>
+            <h1 className="text-2xl font-bold mb-2">Welcome to SubGen AI</h1>
+            <p className="text-slate-400 text-sm">
+              To use the advanced Gemini 3 Pro video analysis features, you need to connect your Google Cloud API Key.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+             <button
+              onClick={handleApiKeySelect}
+              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors flex items-center justify-center space-x-2"
+            >
+              <Key className="w-4 h-4" />
+              <span>Select API Key</span>
+            </button>
+            
+            <a 
+              href="https://ai.google.dev/gemini-api/docs/billing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-xs text-slate-500 hover:text-indigo-400 transition-colors"
+            >
+              <span>View Billing Documentation</span>
+              <ExternalLink className="w-3 h-3 ml-1" />
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-100 selection:bg-indigo-500/30">

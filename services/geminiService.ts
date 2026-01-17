@@ -1,9 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { GeneratorSettings } from "../types";
 
-// Initialize the default client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 /**
  * Generates an SRT subtitle string from a video file.
  * Uses gemini-3-pro-preview (or user specified model) for multimodal video understanding.
@@ -15,9 +12,9 @@ export const generateSubtitlesFromVideo = async (
 ): Promise<string> => {
   
   try {
-    // Note: In a production environment supporting self-hosting, 
-    // we would re-initialize the GoogleGenAI client here if settings.customEndpoint is provided.
-    // For this implementation, we use the standard client but respect the modelId and prompting.
+    // Initialize the client inside the function to ensure it uses the most recent
+    // process.env.API_KEY after user selection.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     const modelId = settings.modelId || 'gemini-3-pro-preview';
 
