@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Server, UserCheck, MessageSquare, Box, Info, ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
+import { X, Server, UserCheck, MessageSquare, Box, Info, ChevronDown, ChevronUp, BookOpen, FileText } from 'lucide-react';
 import { GeneratorSettings } from '../types';
 
 interface SettingsModalProps {
@@ -64,15 +64,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </p>
                 <ul className="list-disc ml-4 space-y-2 text-slate-400">
                   <li>
-                    <strong className="text-indigo-300">Self-Hosting:</strong> Deploy a Gemini-compatible API proxy on your server. Enter your server's base URL in the <code className="text-slate-200">Custom Endpoint</code> field.
+                    <strong className="text-indigo-300">Self-Hosting:</strong> Deploy a Gemini-compatible API proxy on your server. Enter your server's base URL in the <code className="text-slate-200">Custom Endpoint</code> field below.
                   </li>
                   <li>
-                    <strong className="text-indigo-300">Fine-Tuned Models:</strong> Use custom-trained models for specific domains (e.g., medical, adult, technical). Provide the full resource name (e.g., <code className="text-slate-200">tunedModels/my-model-123</code>) in the <code className="text-slate-200">Model ID</code> field.
-                  </li>
-                  <li>
-                    <strong className="text-indigo-300">Privacy:</strong> Using a custom endpoint allows you to route requests through your own secure gateway before they reach the inference engine.
+                    <strong className="text-indigo-300">Fine-Tuned Models:</strong> Use custom-trained models (e.g., <code className="text-slate-200">tunedModels/my-model-123</code>) in the <code className="text-slate-200">Model ID</code> field.
                   </li>
                 </ul>
+                <div className="flex items-center gap-2 mt-4 p-2 bg-slate-900/50 rounded-lg border border-indigo-500/20">
+                  <FileText className="w-4 h-4 text-indigo-400" />
+                  <p className="text-[10px] text-slate-400 italic">
+                    Refer to <code className="text-indigo-300">SELF_HOSTING.md</code> in the project root for a full technical breakdown of the API protocol and setup steps.
+                  </p>
+                </div>
               </div>
             )}
           </div>

@@ -24,3 +24,11 @@ export interface GeneratorSettings {
   modelId: string;
   customEndpoint?: string;
 }
+
+export interface SubtitleEntry {
+  id: string;
+  index: number;
+  startTime: string;
+  endTime: string;
+  text: string;
+}

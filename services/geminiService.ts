@@ -12,9 +12,11 @@ export const generateSubtitlesFromVideo = async (
 ): Promise<string> => {
   
   try {
-    // Initialize the client inside the function to ensure it uses the most recent
-    // process.env.API_KEY after user selection.
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Initialize the client with optional custom endpoint for self-hosted LLMs
+    const ai = new GoogleGenAI({ 
+      apiKey: process.env.API_KEY,
+      baseUrl: settings.customEndpoint || undefined // Defaults to Google's API if empty
+    });
 
     const modelId = settings.modelId || 'gemini-3-pro-preview';
 
@@ -53,15 +55,12 @@ export const generateSubtitlesFromVideo = async (
         ],
       },
       config: {
-        // High token limit to allow for long subtitle files
         maxOutputTokens: 8192, 
-        temperature: 0.2, // Lower temperature for more factual transcription
+        temperature: 0.2,
       }
     });
 
     const srtContent = response.text || "";
-    
-    // Cleanup potential markdown formatting if the model disobeys slightly
     const cleanSrt = srtContent.replace(/^```srt\n/, '').replace(/^```\n/, '').replace(/\n```$/, '');
 
     return cleanSrt;
