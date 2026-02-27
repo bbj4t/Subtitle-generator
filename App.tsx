@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<GeneratorSettings>({
     enableSpeakerLabels: true,
     contentContext: '',
-    modelId: 'gemini-3-pro-preview',
+    modelId: 'gemini-3-flash-preview',
     customEndpoint: ''
   });
 
@@ -118,7 +118,7 @@ const App: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold mb-2">Welcome to SubGen AI</h1>
             <p className="text-slate-400 text-sm">
-              To use the advanced Gemini 3 Pro video analysis features, you need to connect your Google Cloud API Key.
+              To use the advanced Gemini 3 video analysis features, you need to connect your Google Cloud API Key.
             </p>
           </div>
 
@@ -180,7 +180,7 @@ const App: React.FC = () => {
              <div className="bg-indigo-600 p-2 rounded-full">
                <Clapperboard className="w-5 h-5 text-white" />
              </div>
-             <span className="text-slate-200 font-medium tracking-wide text-sm">Gemini 3 Pro Video Analysis</span>
+             <span className="text-slate-200 font-medium tracking-wide text-sm">Gemini 3 Video Analysis</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400">
             SubGen AI
@@ -280,7 +280,7 @@ const App: React.FC = () => {
         
         {/* Footer */}
         <footer className="mt-12 text-center text-slate-600 text-sm">
-          <p>© {new Date().getFullYear()} SubGen AI. Powered by Google Gemini 3 Pro.</p>
+          <p>© {new Date().getFullYear()} SubGen AI. Powered by Google Gemini 3.</p>
         </footer>
 
       </div>

@@ -3,7 +3,7 @@ import { GeneratorSettings } from "../types";
 
 /**
  * Generates an SRT subtitle string from a video file.
- * Uses gemini-3-pro-preview (or user specified model) for multimodal video understanding.
+ * Uses gemini-3-flash-preview (or user specified model) for multimodal video understanding.
  */
 export const generateSubtitlesFromVideo = async (
   base64Data: string, 
@@ -12,13 +12,12 @@ export const generateSubtitlesFromVideo = async (
 ): Promise<string> => {
   
   try {
-    // Initialize the client with optional custom endpoint for self-hosted LLMs
+    // Initialize the client
     const ai = new GoogleGenAI({ 
-      apiKey: process.env.API_KEY,
-      baseUrl: settings.customEndpoint || undefined // Defaults to Google's API if empty
+      apiKey: process.env.API_KEY
     });
 
-    const modelId = settings.modelId || 'gemini-3-pro-preview';
+    const modelId = settings.modelId || 'gemini-3-flash-preview';
 
     // Construct prompting logic based on settings
     const speakerInstruction = settings.enableSpeakerLabels

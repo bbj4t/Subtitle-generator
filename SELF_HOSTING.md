@@ -83,7 +83,7 @@ Nginx or Proxies often limit request sizes to 1MB.
 - **Nginx Fix**: Add `client_max_body_size 100M;` to your configuration.
 
 ### Model Performance
-Local models might struggle with precise timestamps compared to Gemini 3 Pro. If timestamps are "drifting," try:
+Local models might struggle with precise timestamps compared to Gemini 3. If timestamps are "drifting," try:
 1. Providing a higher `temperature` in the model config.
 2. Using a model specifically fine-tuned for captioning.
 

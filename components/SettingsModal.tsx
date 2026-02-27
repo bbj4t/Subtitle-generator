@@ -64,7 +64,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </p>
                 <ul className="list-disc ml-4 space-y-2 text-slate-400">
                   <li>
-                    <strong className="text-indigo-300">Self-Hosting:</strong> Deploy a Gemini-compatible API proxy on your server. Enter your server's base URL in the <code className="text-slate-200">Custom Endpoint</code> field below.
+                    <strong className="text-indigo-300">Advanced Models:</strong> Use specialized models (e.g., <code className="text-slate-200">gemini-3.1-pro-preview</code>) in the <code className="text-slate-200">Model ID</code> field.
                   </li>
                   <li>
                     <strong className="text-indigo-300">Fine-Tuned Models:</strong> Use custom-trained models (e.g., <code className="text-slate-200">tunedModels/my-model-123</code>) in the <code className="text-slate-200">Model ID</code> field.
@@ -148,17 +148,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   type="text"
                   value={settings.modelId}
                   onChange={(e) => handleChange('modelId', e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-sm text-slate-200 font-mono placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-slate-500 block mb-1 uppercase tracking-wider font-bold">Custom Endpoint URL (Optional)</label>
-                <input
-                  type="text"
-                  value={settings.customEndpoint || ''}
-                  onChange={(e) => handleChange('customEndpoint', e.target.value)}
-                  placeholder="https://proxy.example.com/v1"
                   className="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-sm text-slate-200 font-mono placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
                 />
               </div>
